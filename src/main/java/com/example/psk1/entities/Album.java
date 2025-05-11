@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -11,24 +12,25 @@ import java.util.List;
 @Entity
 public class Album {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "album_seq")
+    @SequenceGenerator(name = "album_seq", sequenceName = "album_seq", allocationSize = 1)
     private Long id;
-
-    @Basic
-    private String isbn;
 
     @Basic
     private String title;
 
     @Basic
-    private Integer copies;
-
-    @Version
-    private Long version;
+    private Integer numberOfSongs;
 
     @ManyToOne
     private Artist artist;
 
     @ManyToMany
-    private List<Genre> genres;
+    @JoinTable(
+            name = "album_genre",
+            joinColumns = @JoinColumn(name = "albums_id"),
+            inverseJoinColumns = @JoinColumn(name = "genres_id")
+    )
+    private List<Genre> genres = new ArrayList<>();
+
 }

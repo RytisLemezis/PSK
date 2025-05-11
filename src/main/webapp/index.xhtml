@@ -1,14 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
-  <title>JSF Page</title>
+  <title>PSK1</title>
 </h:head>
+<h:body>
 
-<body>
-testing.
-</body>
+  <h:form>
+    <p:panel header="Album/Artist/Genre System" style="margin-bottom:20px;">
+      <h2>Basic Functionality</h2>
 
+      <p:menu>
+        <p:submenu label="Manage">
+          <p:menuitem value="Artists" outcome="artists.xhtml" icon="pi pi-users"/>
+          <p:menuitem value="Genres" outcome="genres.xhtml" icon="pi pi-tag"/>
+        </p:submenu>
+      </p:menu>
+    </p:panel>
+  </h:form>
+
+</h:body>
 </html>
 

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -11,7 +12,8 @@ import java.util.List;
 @Entity
 public class Genre {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genre_seq")
+    @SequenceGenerator(name = "genre_seq", sequenceName = "genre_seq", allocationSize = 1)
     private Long id;
 
     @Basic
@@ -21,5 +23,6 @@ public class Genre {
     private String description;
 
     @ManyToMany(mappedBy = "genres")
-    private List<Album> albums;
+    private List<Album> albums = new ArrayList<>();
+
 }

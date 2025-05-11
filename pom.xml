@@ -76,6 +76,13 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>13.0.5</version> <!-- or whatever version you're using -->
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
