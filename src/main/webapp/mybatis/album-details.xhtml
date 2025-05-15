@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <title>Album Details</title>
+  <f:metadata>
+    <f:viewParam name="albumId" value="#{albumDetailsController.albumId}"/>
+    <f:viewAction action="#{albumDetailsController.loadAlbum}"/>
+  </f:metadata>
+  <h:outputStylesheet>
+    .album-details {
+      margin: 20px;
+    }
+
+    .detail-row {
+      margin-bottom: 10px;
+    }
+  </h:outputStylesheet>
+</h:head>
+
+<h:body>
+  <h:form>
+    <p:panel header="Album Details" styleClass="album-details">
+
+      <div class="detail-row">
+        <h:outputLabel value="ID: " />
+        <h:outputText value="#{albumDetailsController.album.id}" />
+      </div>
+
+      <div class="detail-row">
+        <h:outputLabel value="Title: " />
+        <h:outputText value="#{albumDetailsController.album.title}" />
+      </div>
+
+      <div class="detail-row">
+        <h:outputLabel value="Number of Songs: " />
+        <h:outputText value="#{albumDetailsController.album.numberOfSongs}" />
+      </div>
+
+      <div class="detail-row">
+        <h:outputLabel value="Author: " />
+        <h:outputText value="#{albumDetailsController.artistName}" />
+      </div>
+
+      <h3>Genres</h3>
+
+      <p:dataTable value="#{albumDetailsController.album.genres}" var="genre"
+                   rendered="#{not empty albumDetailsController.album.genres}"
+                   emptyMessage="This album has no assigned genres"
+                   style="margin-top: 10px;">
+        <p:column headerText="Name">
+          <h:outputText value="#{genre.name}" />
+        </p:column>
+        <p:column headerText="Description">
+          <h:outputText value="#{genre.description}" />
+        </p:column>
+      </p:dataTable>
+
+      <p:outputPanel rendered="#{empty albumDetailsController.album.genres}">
+        <h:outputText value="This album has no assigned genres." style="color: gray;" />
+      </p:outputPanel>
+
+      <div class="button-group" style="margin-top: 20px;">
+        <p:commandButton value="Back to Artist's Albums"
+                         action="artist-albums?faces-redirect=true"
+                         icon="pi pi-arrow-left">
+          <f:param name="artistId" value="#{albumDetailsController.album.artist.id}" />
+        </p:commandButton>
+      </div>
+
+    </p:panel>
+  </h:form>
+</h:body>
+</html>

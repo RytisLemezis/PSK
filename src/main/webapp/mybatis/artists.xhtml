@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+  <title>Artists Management (MyBatis)</title>
+</h:head>
+<h:body>
+  <h:form id="Artists">
+
+    <h1>Artists Management (MyBatis Implementation)</h1>
+
+    <!-- Add New Artist Button -->
+    <p:commandButton value="Add New Artist"
+                     actionListener="#{artistsMyBatis.prepareNewArtist}"
+                     update=":addArtistForm"
+                     oncomplete="PF('addDialog').show()" icon="pi pi-plus" style="margin-bottom: 10px"/>
+
+    <p:commandButton value="Back to Home"
+                     action="index.xhtml?faces-redirect=true"
+                     icon="pi pi-home" style="margin-left: 10px; margin-bottom: 10px;"/>
+
+    <p:dataTable id="artistTable" value="#{artistsMyBatis.allArtists}" var="artist" responsiveLayout="scroll">
+      <p:column headerText="ID">
+        #{artist.id}
+      </p:column>
+      <p:column headerText="First Name">
+        #{artist.firstName}
+      </p:column>
+      <p:column headerText="Last Name">
+        #{artist.lastName}
+      </p:column>
+      <p:column headerText="Actions">
+        <!-- Edit Button -->
+        <p:commandButton value="Edit" icon="pi pi-pencil"
+                         actionListener="#{artistsMyBatis.selectArtist(artist)}"
+                         update=":editArtistForm"
+                         oncomplete="PF('editDialog').show()" />
+
+        <!-- Albums Button -->
+        <p:commandButton value="Albums" icon="pi pi-folder"
+                         action="#{albumsController.viewArtistAlbums(artist.id)}"
+                         style="margin-left: 5px;" />
+      </p:column>
+    </p:dataTable>
+
+  </h:form>
+
+  <!-- Add Artist Dialog -->
+  <p:dialog header="Add New Artist" widgetVar="addDialog" modal="true" closable="true" resizable="false" width="400">
+    <h:form id="addArtistForm">
+      <p:panelGrid columns="2" columnClasses="label,value">
+        <p:outputLabel for="firstNameAdd" value="First Name:" />
+        <p:inputText id="firstNameAdd" value="#{artistsMyBatis.artistToCreate.firstName}" required="true"/>
+
+        <p:outputLabel for="lastNameAdd" value="Last Name:" />
+        <p:inputText id="lastNameAdd" value="#{artistsMyBatis.artistToCreate.lastName}" required="true"/>
+      </p:panelGrid>
+
+      <p:separator/>
+
+      <!-- Save and Cancel Buttons for Add Artist -->
+      <p:commandButton value="Save"
+                       action="#{artistsMyBatis.createArtist}"
+                       update=":Artists"
+                       oncomplete="PF('addDialog').hide()"
+                       icon="pi pi-save" />
+
+      <p:commandButton value="Cancel"
+                       onclick="PF('addDialog').hide(); return false;"
+                       type="button"
+                       icon="pi pi-times"
+                       style="margin-left: 10px;" />
+    </h:form>
+  </p:dialog>
+
+  <!-- Edit Artist Dialog -->
+  <p:dialog header="Edit Artist" widgetVar="editDialog" modal="true" closable="true" resizable="false" width="400">
+    <h:form id="editArtistForm">
+      <p:panelGrid columns="2" columnClasses="label,value">
+        <p:outputLabel for="firstNameEdit" value="First Name:" />
+        <p:inputText id="firstNameEdit" value="#{artistsMyBatis.artistToCreate.firstName}" required="true"/>
+
+        <p:outputLabel for="lastNameEdit" value="Last Name:" />
+        <p:inputText id="lastNameEdit" value="#{artistsMyBatis.artistToCreate.lastName}" required="true"/>
+      </p:panelGrid>
+
+      <p:separator/>
+
+      <!-- Save and Cancel Buttons for Edit Artist -->
+      <p:commandButton value="Save"
+                       action="#{artistsMyBatis.updateArtist}"
+                       update=":Artists"
+                       oncomplete="PF('editDialog').hide()"
+                       icon="pi pi-save" />
+
+      <p:commandButton value="Cancel"
+                       onclick="PF('editDialog').hide(); return false;"
+                       type="button"
+                       icon="pi pi-times"
+                       style="margin-left: 10px;" />
+    </h:form>
+  </p:dialog>
+
+</h:body>
+</html>
