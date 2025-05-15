@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.psk1.mybatis.dao.AlbumMapper">
+
+  <resultMap id="BaseResultMap" type="com.example.psk1.mybatis.model.Album">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="NUMBEROFSONGS" jdbcType="INTEGER" property="numberofsongs" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+
+    <association property="artist" javaType="com.example.psk1.mybatis.model.Artist">
+      <id column="ARTIST_ID" property="id" jdbcType="BIGINT"/>
+      <result column="FIRSTNAME" property="firstname" jdbcType="VARCHAR"/>
+      <result column="LASTNAME" property="lastname" jdbcType="VARCHAR"/>
+    </association>
+
+    <collection property="genres" ofType="com.example.psk1.mybatis.model.Genre"
+                select="selectGenresByAlbumId"
+                column="ID"/>
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from PUBLIC.ALBUM
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="com.example.psk1.mybatis.model.Album" useGeneratedKeys="true">
+    insert into PUBLIC.ALBUM (NUMBEROFSONGS, TITLE, ARTIST_ID)
+    values (#{numberofsongs,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{artist.id,jdbcType=BIGINT})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.psk1.mybatis.model.Album">
+    update PUBLIC.ALBUM
+    set NUMBEROFSONGS = #{numberofsongs,jdbcType=INTEGER},
+        TITLE = #{title,jdbcType=VARCHAR},
+        ARTIST_ID = #{artist.id,jdbcType=BIGINT}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+      a.ID,
+      a.NUMBEROFSONGS,
+      a.TITLE,
+      a.ARTIST_ID,
+      ar.FIRSTNAME,
+      ar.LASTNAME
+    from PUBLIC.ALBUM a
+           left join PUBLIC.ARTIST ar on a.ARTIST_ID = ar.ID
+    where a.ID = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+      a.ID,
+      a.NUMBEROFSONGS,
+      a.TITLE,
+      a.ARTIST_ID,
+      ar.FIRSTNAME,
+      ar.LASTNAME
+    from PUBLIC.ALBUM a
+           left join PUBLIC.ARTIST ar on a.ARTIST_ID = ar.ID
+  </select>
+
+  <!-- Select Genres by Album ID for many-to-many -->
+  <select id="selectGenresByAlbumId" parameterType="java.lang.Long" resultType="com.example.psk1.mybatis.model.Genre">
+    SELECT g.ID, g.DESCRIPTION, g.NAME
+    FROM PUBLIC.GENRE g
+           INNER JOIN PUBLIC.ALBUM_GENRE ag ON g.ID = ag.GENRES_ID
+    WHERE ag.ALBUMS_ID = #{albumId}
+  </select>
+
+</mapper>

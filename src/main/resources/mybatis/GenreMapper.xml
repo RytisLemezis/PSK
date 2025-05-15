@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.psk1.mybatis.dao.GenreMapper">
+  <resultMap id="BaseResultMap" type="com.example.psk1.mybatis.model.Genre">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <collection property="albums" ofType="com.example.psk1.mybatis.model.Album"
+                select="com.example.psk1.mybatis.dao.GenreMapper.selectAlbumsByGenreId"
+                column="ID" />
+  </resultMap>
+
+  <select id="selectAlbumsByGenreId" parameterType="java.lang.Long" resultType="com.example.psk1.mybatis.model.Album">
+    SELECT a.ID, a.NUMBEROFSONGS, a.TITLE, a.ARTIST_ID
+    FROM PUBLIC.ALBUM a
+           INNER JOIN PUBLIC.ALBUM_GENRE ag ON a.ID = ag.ALBUMS_ID
+    WHERE ag.GENRES_ID = #{genreId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from PUBLIC.GENRE
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="com.example.psk1.mybatis.model.Genre" useGeneratedKeys="true">
+    insert into PUBLIC.GENRE (DESCRIPTION, NAME)
+    values (#{description,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.psk1.mybatis.model.Genre">
+    update PUBLIC.GENRE
+    set DESCRIPTION = #{description,jdbcType=VARCHAR},
+        NAME = #{name,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select ID, DESCRIPTION, NAME
+    from PUBLIC.GENRE
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, DESCRIPTION, NAME
+    from PUBLIC.GENRE
+  </select>
+</mapper>

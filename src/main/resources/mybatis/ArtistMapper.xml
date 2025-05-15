@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.psk1.mybatis.dao.ArtistMapper">
+  <resultMap id="BaseResultMap" type="com.example.psk1.mybatis.model.Artist">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="FIRSTNAME" jdbcType="VARCHAR" property="firstname" />
+    <result column="LASTNAME" jdbcType="VARCHAR" property="lastname" />
+    <collection property="albums" ofType="com.example.psk1.mybatis.model.Album" select="selectAlbumsByArtistId" column="ID"/>
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from PUBLIC.ARTIST
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" keyColumn="ID" keyProperty="id" parameterType="com.example.psk1.mybatis.model.Artist" useGeneratedKeys="true">
+    insert into PUBLIC.ARTIST (FIRSTNAME, LASTNAME)
+    values (#{firstname,jdbcType=VARCHAR}, #{lastname,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.example.psk1.mybatis.model.Artist">
+    update PUBLIC.ARTIST
+    set FIRSTNAME = #{firstname,jdbcType=VARCHAR},
+    LASTNAME = #{lastname,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select ID, FIRSTNAME, LASTNAME
+    from PUBLIC.ARTIST
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, FIRSTNAME, LASTNAME
+    from PUBLIC.ARTIST
+  </select>
+
+  <select id="selectAlbumsByArtistId" parameterType="java.lang.Long" resultType="com.example.psk1.mybatis.model.Album">
+    select ID, NUMBEROFSONGS, TITLE, ARTIST_ID
+    from PUBLIC.ALBUM
+    where ARTIST_ID = #{value}
+  </select>
+
+  </mapper>
+
