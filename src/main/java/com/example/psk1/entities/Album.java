@@ -12,8 +12,7 @@ import java.util.List;
 @Entity
 public class Album {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "album_seq")
-    @SequenceGenerator(name = "album_seq", sequenceName = "album_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Basic

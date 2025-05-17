@@ -11,9 +11,9 @@ import java.util.List;
 @Getter
 @Entity
 public class Genre {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "genre_seq")
-    @SequenceGenerator(name = "genre_seq", sequenceName = "genre_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Basic

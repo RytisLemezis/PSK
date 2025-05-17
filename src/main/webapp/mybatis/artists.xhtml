@@ -9,42 +9,49 @@
   <title>Artists Management (MyBatis)</title>
 </h:head>
 <h:body>
-  <h:form id="Artists">
+
+  <h:form id="artistsForm">
 
     <h1>Artists Management (MyBatis Implementation)</h1>
 
     <!-- Add New Artist Button -->
     <p:commandButton value="Add New Artist"
-                     actionListener="#{artistsMyBatis.prepareNewArtist}"
                      update=":addArtistForm"
-                     oncomplete="PF('addDialog').show()" icon="pi pi-plus" style="margin-bottom: 10px"/>
+                     oncomplete="PF('addDialog').show()"
+                     icon="pi pi-plus"
+                     style="margin-bottom: 10px" />
 
     <p:commandButton value="Back to Home"
-                     action="index.xhtml?faces-redirect=true"
-                     icon="pi pi-home" style="margin-left: 10px; margin-bottom: 10px;"/>
+                     action="/index.xhtml?faces-redirect=true"
+                     icon="pi pi-home"
+                     style="margin-left: 10px; margin-bottom: 10px" />
 
-    <p:dataTable id="artistTable" value="#{artistsMyBatis.allArtists}" var="artist" responsiveLayout="scroll">
-      <p:column headerText="ID">
+    <p:dataTable id="artistTable" value="#{artistMyBatis.allArtists}" var="artist" responsiveLayout="scroll" styleClass="table">
+
+      <p:column headerText="ID" style="width:50px">
         #{artist.id}
       </p:column>
+
       <p:column headerText="First Name">
-        #{artist.firstName}
+        #{artist.firstname}
       </p:column>
+
       <p:column headerText="Last Name">
-        #{artist.lastName}
+        #{artist.lastname}
       </p:column>
+
       <p:column headerText="Actions">
-        <!-- Edit Button -->
         <p:commandButton value="Edit" icon="pi pi-pencil"
-                         actionListener="#{artistsMyBatis.selectArtist(artist)}"
+                         actionListener="#{artistMyBatis.setArtistToEdit(artist)}"
                          update=":editArtistForm"
                          oncomplete="PF('editDialog').show()" />
 
-        <!-- Albums Button -->
         <p:commandButton value="Albums" icon="pi pi-folder"
-                         action="#{albumsController.viewArtistAlbums(artist.id)}"
+                         action="#{albumMyBatis.viewArtistAlbums(artist.id)}"
                          style="margin-left: 5px;" />
+
       </p:column>
+
     </p:dataTable>
 
   </h:form>
@@ -52,20 +59,19 @@
   <!-- Add Artist Dialog -->
   <p:dialog header="Add New Artist" widgetVar="addDialog" modal="true" closable="true" resizable="false" width="400">
     <h:form id="addArtistForm">
-      <p:panelGrid columns="2" columnClasses="label,value">
+      <p:panelGrid columns="2" columnClasses="label,value" style="margin-bottom:10px;">
+
         <p:outputLabel for="firstNameAdd" value="First Name:" />
-        <p:inputText id="firstNameAdd" value="#{artistsMyBatis.artistToCreate.firstName}" required="true"/>
+        <p:inputText id="firstNameAdd" value="#{artistMyBatis.artistToCreate.firstname}" required="true" label="First Name" />
 
         <p:outputLabel for="lastNameAdd" value="Last Name:" />
-        <p:inputText id="lastNameAdd" value="#{artistsMyBatis.artistToCreate.lastName}" required="true"/>
+        <p:inputText id="lastNameAdd" value="#{artistMyBatis.artistToCreate.lastname}" required="true" label="Last Name" />
+
       </p:panelGrid>
 
-      <p:separator/>
-
-      <!-- Save and Cancel Buttons for Add Artist -->
       <p:commandButton value="Save"
-                       action="#{artistsMyBatis.createArtist}"
-                       update=":Artists"
+                       action="#{artistMyBatis.createArtist}"
+                       update=":artistsForm:artistTable"
                        oncomplete="PF('addDialog').hide()"
                        icon="pi pi-save" />
 
@@ -80,20 +86,19 @@
   <!-- Edit Artist Dialog -->
   <p:dialog header="Edit Artist" widgetVar="editDialog" modal="true" closable="true" resizable="false" width="400">
     <h:form id="editArtistForm">
-      <p:panelGrid columns="2" columnClasses="label,value">
+      <p:panelGrid columns="2" columnClasses="label,value" style="margin-bottom:10px;">
+
         <p:outputLabel for="firstNameEdit" value="First Name:" />
-        <p:inputText id="firstNameEdit" value="#{artistsMyBatis.artistToCreate.firstName}" required="true"/>
+        <p:inputText id="firstNameEdit" value="#{artistMyBatis.artistToEdit.firstname}" required="true" label="First Name" />
 
         <p:outputLabel for="lastNameEdit" value="Last Name:" />
-        <p:inputText id="lastNameEdit" value="#{artistsMyBatis.artistToCreate.lastName}" required="true"/>
+        <p:inputText id="lastNameEdit" value="#{artistMyBatis.artistToEdit.lastname}" required="true" label="Last Name" />
+
       </p:panelGrid>
 
-      <p:separator/>
-
-      <!-- Save and Cancel Buttons for Edit Artist -->
       <p:commandButton value="Save"
-                       action="#{artistsMyBatis.updateArtist}"
-                       update=":Artists"
+                       action="#{artistMyBatis.updateArtist}"
+                       update=":artistsForm:artistTable"
                        oncomplete="PF('editDialog').hide()"
                        icon="pi pi-save" />
 

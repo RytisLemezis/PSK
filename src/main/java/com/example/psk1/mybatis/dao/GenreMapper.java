@@ -20,5 +20,7 @@ public interface GenreMapper {
 
     List<Genre> selectAll();
 
+    List<Genre> selectByAlbumId(Long albumId);
+
     int updateByPrimaryKey(Genre row);
 }

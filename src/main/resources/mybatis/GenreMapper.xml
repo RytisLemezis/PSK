@@ -40,6 +40,13 @@
     where ID = #{id,jdbcType=BIGINT}
   </select>
 
+  <select id="selectByAlbumId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT g.ID, g.NAME, g.DESCRIPTION
+    FROM GENRE g
+           JOIN ALBUM_GENRE bg ON g.ID = bg.GENRES_ID
+    WHERE bg.ALBUMS_ID = #{albumId,jdbcType=BIGINT}
+  </select>
+
   <select id="selectAll" resultMap="BaseResultMap">
     select ID, DESCRIPTION, NAME
     from PUBLIC.GENRE

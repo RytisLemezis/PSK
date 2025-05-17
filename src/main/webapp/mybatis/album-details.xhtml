@@ -5,20 +5,11 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
-  <title>Album Details</title>
+  <title>Album Details (MyBatis)</title>
   <f:metadata>
-    <f:viewParam name="albumId" value="#{albumDetailsController.albumId}"/>
-    <f:viewAction action="#{albumDetailsController.loadAlbum}"/>
+    <f:viewParam name="albumId" value="#{albumDetailsMyBatis.albumId}" />
+    <f:viewAction action="#{albumDetailsMyBatis.loadAlbum}" />
   </f:metadata>
-  <h:outputStylesheet>
-    .album-details {
-      margin: 20px;
-    }
-
-    .detail-row {
-      margin-bottom: 10px;
-    }
-  </h:outputStylesheet>
 </h:head>
 
 <h:body>
@@ -27,28 +18,28 @@
 
       <div class="detail-row">
         <h:outputLabel value="ID: " />
-        <h:outputText value="#{albumDetailsController.album.id}" />
+        <h:outputText value="#{albumDetailsMyBatis.album.id}" />
       </div>
 
       <div class="detail-row">
         <h:outputLabel value="Title: " />
-        <h:outputText value="#{albumDetailsController.album.title}" />
+        <h:outputText value="#{albumDetailsMyBatis.album.title}" />
       </div>
 
       <div class="detail-row">
         <h:outputLabel value="Number of Songs: " />
-        <h:outputText value="#{albumDetailsController.album.numberOfSongs}" />
+        <h:outputText value="#{albumDetailsMyBatis.album.numberofsongs}" />
       </div>
 
       <div class="detail-row">
-        <h:outputLabel value="Author: " />
-        <h:outputText value="#{albumDetailsController.artistName}" />
+        <h:outputLabel value="Artist: " />
+        <h:outputText value="#{albumDetailsMyBatis.artistName}" />
       </div>
 
       <h3>Genres</h3>
 
-      <p:dataTable value="#{albumDetailsController.album.genres}" var="genre"
-                   rendered="#{not empty albumDetailsController.album.genres}"
+      <p:dataTable value="#{albumDetailsMyBatis.albumGenres}" var="genre"
+                   rendered="#{albumDetailsMyBatis.hasGenres()}"
                    emptyMessage="This album has no assigned genres"
                    style="margin-top: 10px;">
         <p:column headerText="Name">
@@ -59,16 +50,14 @@
         </p:column>
       </p:dataTable>
 
-      <p:outputPanel rendered="#{empty albumDetailsController.album.genres}">
+      <p:outputPanel rendered="#{not albumDetailsMyBatis.hasGenres()}">
         <h:outputText value="This album has no assigned genres." style="color: gray;" />
       </p:outputPanel>
 
       <div class="button-group" style="margin-top: 20px;">
-        <p:commandButton value="Back to Artist's Albums"
-                         action="artist-albums?faces-redirect=true"
-                         icon="pi pi-arrow-left">
-          <f:param name="artistId" value="#{albumDetailsController.album.artist.id}" />
-        </p:commandButton>
+        <p:commandButton value="Back to the Start"
+                         action="index"
+                         icon="pi pi-arrow-left" />
       </div>
 
     </p:panel>

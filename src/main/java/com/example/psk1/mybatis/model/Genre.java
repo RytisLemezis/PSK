@@ -7,7 +7,6 @@ public class Genre {
     private String description;
     private String name;
 
-    // Many-to-many: susiję albumai
     private List<Album> albums;
 
     public Long getId() {

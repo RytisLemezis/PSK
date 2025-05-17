@@ -42,7 +42,7 @@
   <select id="selectAlbumsByArtistId" parameterType="java.lang.Long" resultType="com.example.psk1.mybatis.model.Album">
     select ID, NUMBEROFSONGS, TITLE, ARTIST_ID
     from PUBLIC.ALBUM
-    where ARTIST_ID = #{value}
+    where ARTIST_ID = #{artistId}
   </select>
 
   </mapper>

@@ -1,56 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
   <title>Genres Management (MyBatis)</title>
 </h:head>
 <h:body>
-  <h1>Genres Management (MyBatis Implementation)</h1>
 
-  <div class="button-group">
-    <h:form>
-      <h:commandButton value="Add New Genre"
-                       onclick="document.getElementById('genreForm').style.display='block'; return false;"/>
-      <h:link value="Back to Home" outcome="/index.xhtml" style="margin-left: 10px;"/>
-    </h:form>
-  </div>
+  <h:form id="genresForm">
 
-  <h:form>
-    <h:dataTable value="#{genreMyBatis.allGenres}" var="genre" styleClass="table">
-      <h:column>
-        <f:facet name="header">ID</f:facet>
+    <h1>Genres Management (MyBatis)</h1>
+
+    <p:commandButton value="Add New Genre"
+                     icon="pi pi-plus"
+                     update=":addGenreForm"
+                     oncomplete="PF('addDialog').show()"
+                     style="margin-bottom: 10px" />
+
+    <p:commandButton value="Back to Home"
+                     icon="pi pi-home"
+                     action="/index.xhtml?faces-redirect=true"
+                     style="margin-left: 10px; margin-bottom: 10px" />
+
+    <p:dataTable id="genreTable" value="#{genreMyBatis.allGenres}" var="genre" responsiveLayout="scroll" styleClass="table">
+
+      <p:column headerText="ID" style="width:50px">
         #{genre.id}
-      </h:column>
-      <h:column>
-        <f:facet name="header">Name</f:facet>
+      </p:column>
+
+      <p:column headerText="Name">
         #{genre.name}
-      </h:column>
-      <h:column>
-        <f:facet name="header">Description</f:facet>
+      </p:column>
+
+      <p:column headerText="Description">
         #{genre.description}
-      </h:column>
-    </h:dataTable>
+      </p:column>
+
+      <p:column headerText="Actions" style="width:150px">
+
+        <p:commandButton value="Edit"
+                         icon="pi pi-pencil"
+                         actionListener="#{genreMyBatis.setGenreToEdit(genre)}"
+                         update=":editGenreForm"
+                         oncomplete="PF('editDialog').show()" />
+
+        <p:button value="View Albums" outcome="/mybatis/genre-albums" style="margin-left: 5px;">
+          <f:param name="genreId" value="#{genre.id}" />
+        </p:button>
+
+      </p:column>
+
+    </p:dataTable>
+
   </h:form>
 
-  <div id="genreForm" style="display: none; margin-top: 20px; border: 1px solid #ddd; padding: 15px;">
-    <h2>Add New Genre</h2>
-    <h:form>
-      <div class="form-group">
-        <h:outputLabel for="name" value="Name:"/>
-        <h:inputText id="name" value="#{genreMyBatis.genreToCreate.name}" required="true"/>
-      </div>
-      <div class="form-group">
-        <h:outputLabel for="description" value="Description:"/>
-        <h:inputTextarea id="description" value="#{genreMyBatis.genreToCreate.description}" rows="4" cols="50"/>
-      </div>
-      <div class="button-group">
-        <h:commandButton value="Save" action="#{genreMyBatis.createGenre()}"/>
-        <h:commandButton value="Cancel" onclick="document.getElementById('genreForm').style.display='none'; return false;" style="margin-left: 10px;"/>
-      </div>
+  <!-- Add New Genre Dialog -->
+  <p:dialog header="Add New Genre" widgetVar="addDialog" modal="true" closable="true" resizable="false" width="400">
+    <h:form id="addGenreForm">
+
+      <p:panelGrid columns="2" columnClasses="label,value" style="margin-bottom:10px;">
+
+        <p:outputLabel for="nameAdd" value="Name:" />
+        <p:inputText id="nameAdd" value="#{genreMyBatis.genreToCreate.name}" required="true" label="Name" />
+
+        <p:outputLabel for="descriptionAdd" value="Description:" />
+        <p:inputTextarea id="descriptionAdd" value="#{genreMyBatis.genreToCreate.description}" rows="4" cols="30" label="Description" />
+
+      </p:panelGrid>
+
+      <p:commandButton value="Save"
+                       action="#{genreMyBatis.createGenre}"
+                       update=":genresForm:genreTable"
+                       oncomplete="PF('addDialog').hide()"
+                       icon="pi pi-save" />
+
+      <p:commandButton value="Cancel"
+                       onclick="PF('addDialog').hide(); return false;"
+                       type="button"
+                       icon="pi pi-times"
+                       style="margin-left: 10px;" />
+
     </h:form>
-  </div>
+  </p:dialog>
+
+  <!-- Edit Genre Dialog -->
+  <p:dialog header="Edit Genre" widgetVar="editDialog" modal="true" closable="true" resizable="false" width="400">
+    <h:form id="editGenreForm">
+
+      <p:panelGrid columns="2" columnClasses="label,value" style="margin-bottom:10px;">
+
+        <p:outputLabel for="nameEdit" value="Name:" />
+        <p:inputText id="nameEdit" value="#{genreMyBatis.genreToEdit.name}" required="true" label="Name" />
+
+        <p:outputLabel for="descriptionEdit" value="Description:" />
+        <p:inputTextarea id="descriptionEdit" value="#{genreMyBatis.genreToEdit.description}" rows="4" cols="30" label="Description" />
+
+      </p:panelGrid>
+
+      <p:commandButton value="Save"
+                       action="#{genreMyBatis.updateGenre}"
+                       update=":genresForm:genreTable"
+                       oncomplete="PF('editDialog').hide()"
+                       icon="pi pi-save" />
+
+      <p:commandButton value="Cancel"
+                       onclick="PF('editDialog').hide(); return false;"
+                       type="button"
+                       icon="pi pi-times"
+                       style="margin-left: 10px;" />
+
+    </h:form>
+  </p:dialog>
+
 </h:body>
 </html>

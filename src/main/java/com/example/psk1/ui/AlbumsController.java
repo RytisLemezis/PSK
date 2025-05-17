@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class AlbumsController implements Serializable {
     @Inject
     private AlbumService albumService;
@@ -63,8 +63,11 @@ public class AlbumsController implements Serializable {
     }
 
     private void loadGenres() {
-        allGenres = genreService.getAllGenresWithAlbums();
+        allGenres.clear();
+        allGenres = genreService.getAllGenres();
     }
+
+
     public void loadArtistAlbums() {
         if (artistId != null) {
             Artist artist = artistService.getArtistById(artistId);
@@ -131,7 +134,6 @@ public class AlbumsController implements Serializable {
     public void prepareNewAlbum() {
         selectedAlbum = new Album();            // Create a fresh Album
         selectedGenreIds = new Long[0];         // Reset selected genre
-        System.out.println("skrrrr");
     }
 
 

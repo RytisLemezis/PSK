@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+  <title>Artist Albums (MyBatis)</title>
+  <f:metadata>
+    <f:viewParam name="artistId" value="#{albumMyBatis.artistId}"/>
+    <f:viewAction action="#{albumMyBatis.loadArtistAlbums}"/>
+  </f:metadata>
+</h:head>
+
+<h:body>
+  <h:form id="albumsForm">
+    <p:panel header="Albums by #{albumMyBatis.artistName}" style="margin-bottom: 20px;">
+      <p:commandButton value="Add New Album"
+                       icon="pi pi-plus"
+                       actionListener="#{albumMyBatis.prepareNewAlbum}"
+                       update=":addAlbumForm"
+                       oncomplete="PF('addAlbumDialog').show();"
+                       styleClass="ui-button-success"
+                       style="margin-right: 10px;" />
+
+      <p:button value="Back to Artists"
+                outcome="artists"
+                icon="pi pi-arrow-left"
+                styleClass="ui-button-secondary" />
+    </p:panel>
+
+    <p:dataTable value="#{albumMyBatis.albums}" var="album" responsiveLayout="scroll">
+      <p:column headerText="ID">
+        #{album.id}
+      </p:column>
+      <p:column headerText="Title">
+        #{album.title}
+      </p:column>
+      <p:column headerText="Number of Songs">
+        #{album.numberofsongs}
+      </p:column>
+      <p:column headerText="Actions">
+        <p:commandButton value="Edit"
+                         icon="pi pi-pencil"
+                         styleClass="ui-button-warning"
+                         action="#{albumMyBatis.setSelectedAlbum(album)}"
+                         update=":editAlbumForm"
+                         oncomplete="PF('editAlbumDialog').show();" />
+
+        <p:button value="Details"
+                  outcome="/mybatis/album-details"
+                  icon="pi pi-info-circle"
+                  styleClass="ui-button-secondary"
+                  style="margin-left: 5px;">
+          <f:param name="albumId" value="#{album.id}" />
+        </p:button>
+
+      </p:column>
+    </p:dataTable>
+  </h:form>
+
+  <!-- ADD ALBUM DIALOG -->
+  <p:dialog header="Add New Album for #{albumMyBatis.artistName}"
+            widgetVar="addAlbumDialog" modal="true" closable="true"
+            resizable="false" width="600">
+
+    <h:form id="addAlbumForm">
+      <p:panelGrid columns="2" columnClasses="label,value">
+
+        <p:outputLabel for="titleAdd" value="Title:" />
+        <p:inputText id="titleAdd"
+                     value="#{albumMyBatis.selectedAlbum.title}"
+                     required="true" />
+
+        <p:outputLabel for="numberAdd" value="Number of Songs:" />
+        <p:inputNumber id="numberAdd"
+                       value="#{albumMyBatis.selectedAlbum.numberofsongs}"
+                       required="true" minValue="1" maxValue="100" />
+
+        <p:outputLabel for="genresAdd" value="Genres:" />
+        <p:selectCheckboxMenu id="genresAdd"
+                              label="Select Genres"
+                              value="#{albumMyBatis.selectedGenreIds}"
+                              multiple="true" filter="true" style="width:100%;">
+          <f:selectItems value="#{albumMyBatis.allGenres}"
+                         var="genre"
+                         itemValue="#{genre.id}"
+                         itemLabel="#{genre.name}" />
+        </p:selectCheckboxMenu>
+
+      </p:panelGrid>
+
+      <p:separator/>
+
+      <p:commandButton value="Save"
+                       action="#{albumMyBatis.saveAlbum()}"
+                       update=":albumsForm"
+                       oncomplete="PF('addAlbumDialog').hide()"
+                       icon="pi pi-save" styleClass="p-mr-2" />
+
+      <p:commandButton value="Cancel"
+                       onclick="PF('addAlbumDialog').hide(); return false;"
+                       type="button" icon="pi pi-times" />
+    </h:form>
+  </p:dialog>
+
+  <!-- EDIT ALBUM DIALOG -->
+  <p:dialog header="Edit Album"
+            widgetVar="editAlbumDialog" modal="true" closable="true"
+            resizable="false" width="600">
+
+    <h:form id="editAlbumForm">
+      <p:panelGrid columns="2" columnClasses="label,value">
+
+        <p:outputLabel for="titleEdit" value="Title:" />
+        <p:inputText id="titleEdit"
+                     value="#{albumMyBatis.selectedAlbum.title}"
+                     required="true" />
+
+        <p:outputLabel for="numberEdit" value="Number of Songs:" />
+        <p:inputNumber id="numberEdit"
+                       value="#{albumMyBatis.selectedAlbum.numberofsongs}"
+                       required="true" minValue="1" maxValue="100" />
+
+        <p:outputLabel for="genresEdit" value="Genres:" />
+        <p:selectCheckboxMenu id="genresEdit"
+                              label="Select Genres"
+                              value="#{albumMyBatis.selectedGenreIds}"
+                              multiple="true" filter="true" style="width:100%;">
+          <f:selectItems value="#{albumMyBatis.allGenres}"
+                         var="genre"
+                         itemValue="#{genre.id}"
+                         itemLabel="#{genre.name}" />
+        </p:selectCheckboxMenu>
+
+      </p:panelGrid>
+
+      <p:separator/>
+
+      <p:commandButton value="Save Changes"
+                       action="#{albumMyBatis.saveAlbum}"
+                       update=":albumsForm"
+                       oncomplete="PF('editAlbumDialog').hide()"
+                       icon="pi pi-save" styleClass="p-mr-2" />
+
+      <p:commandButton value="Cancel"
+                       onclick="PF('editAlbumDialog').hide(); return false;"
+                       type="button" icon="pi pi-times" />
+    </h:form>
+  </p:dialog>
+</h:body>
+</html>

@@ -6,9 +6,10 @@
 <mapper namespace="com.example.psk1.mybatis.dao.AlbumMapper">
 
   <resultMap id="BaseResultMap" type="com.example.psk1.mybatis.model.Album">
-    <id column="ID" jdbcType="BIGINT" property="id" />
-    <result column="NUMBEROFSONGS" jdbcType="INTEGER" property="numberofsongs" />
-    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <id column="ID" jdbcType="BIGINT" property="id"/>
+    <result column="NUMBEROFSONGS" jdbcType="INTEGER" property="numberofsongs"/>
+    <result column="TITLE" jdbcType="VARCHAR" property="title"/>
+    <result column="ARTIST_ID" jdbcType="BIGINT" property="artistId"/>
 
     <association property="artist" javaType="com.example.psk1.mybatis.model.Artist">
       <id column="ARTIST_ID" property="id" jdbcType="BIGINT"/>
@@ -35,9 +36,10 @@
     update PUBLIC.ALBUM
     set NUMBEROFSONGS = #{numberofsongs,jdbcType=INTEGER},
         TITLE = #{title,jdbcType=VARCHAR},
-        ARTIST_ID = #{artist.id,jdbcType=BIGINT}
+        ARTIST_ID = #{artistId,jdbcType=BIGINT}
     where ID = #{id,jdbcType=BIGINT}
   </update>
+
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -64,12 +66,27 @@
            left join PUBLIC.ARTIST ar on a.ARTIST_ID = ar.ID
   </select>
 
-  <!-- Select Genres by Album ID for many-to-many -->
   <select id="selectGenresByAlbumId" parameterType="java.lang.Long" resultType="com.example.psk1.mybatis.model.Genre">
     SELECT g.ID, g.DESCRIPTION, g.NAME
     FROM PUBLIC.GENRE g
            INNER JOIN PUBLIC.ALBUM_GENRE ag ON g.ID = ag.GENRES_ID
     WHERE ag.ALBUMS_ID = #{albumId}
   </select>
+
+  <select id="selectByGenreId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    SELECT a.*
+    FROM album a
+           JOIN ALBUM_GENRE ag ON a.id = ag.ALBUMS_ID
+    WHERE ag.GENRES_ID = #{genreId}
+  </select>
+
+  <delete id="deleteGenresForAlbum">
+    DELETE FROM ALBUM_GENRE WHERE ALBUMS_ID = #{albumId}
+  </delete>
+
+  <insert id="insertAlbumGenre">
+    INSERT INTO ALBUM_GENRE (ALBUMS_ID, GENRES_ID) VALUES (#{albumId}, #{genreId})
+  </insert>
+
 
 </mapper>
