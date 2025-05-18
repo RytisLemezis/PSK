@@ -24,6 +24,9 @@ public class Album {
     @ManyToOne
     private Artist artist;
 
+    @Version
+    private Long version;
+
     @ManyToMany
     @JoinTable(
             name = "album_genre",

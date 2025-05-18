@@ -2,6 +2,7 @@ package com.example.psk1.ui;
 
 import com.example.psk1.entities.Artist;
 import com.example.psk1.entities.Genre;
+import com.example.psk1.services.GenreFetcher;
 import com.example.psk1.services.GenreService;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,9 @@ public class GenresController implements Serializable {
     @Inject
     private GenreService genreService;
 
+    @Inject
+    private GenreFetcher genreFetcher;
+
     @Getter
     @Setter
     private Genre selectedGenre = new Genre();
@@ -36,7 +40,7 @@ public class GenresController implements Serializable {
     }
 
     private void loadGenres() {
-        genres = genreService.getAllGenres();
+        genres = genreFetcher.getAllGenres();
     }
 
     public String createGenre() {
