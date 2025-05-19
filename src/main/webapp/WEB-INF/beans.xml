@@ -5,16 +5,4 @@
                            http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
        version="1.1" bean-discovery-mode="all">
 
-    <alternatives>
-      <class>com.example.psk1.services.MockArtistService</class>
-    </alternatives>
-
-    <interceptors>
-        <class>com.example.psk1.interceptors.ProfilingInterceptor</class>
-    </interceptors>
-
-    <decorators>
-        <class>com.example.psk1.decorators.GenreFetcherDecorator</class>
-    </decorators>
-
 </beans>

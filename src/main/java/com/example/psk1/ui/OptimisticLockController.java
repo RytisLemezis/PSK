@@ -98,7 +98,7 @@ public class OptimisticLockController implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Step 3 Complete",
                                 "OptimisticLockException thrown as expected! The stale reference with version " +
-                                        staleAlbumReference.getVersion() + " could not be used to update the book."));
+                                        staleAlbumReference.getVersion() + " could not be used."));
 
                 FacesContext.getCurrentInstance().addMessage(null,
                         new FacesMessage(FacesMessage.SEVERITY_INFO, "Transaction Status",

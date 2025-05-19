@@ -1,4 +1,4 @@
-package com.example.psk1.services;
+/*package com.example.psk1.services;
 
 import com.example.psk1.entities.Artist;
 
@@ -23,5 +23,5 @@ public class SpecialArtistService extends ArtistService {
         mockList.add(a);
         return mockList;
     }
-}
+}*/
 
