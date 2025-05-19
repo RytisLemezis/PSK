@@ -50,6 +50,7 @@ public class GenreApi {
         }
 
         existing.setName(updatedGenre.getName());
+        existing.setDescription(updatedGenre.getDescription());
         genreService.updateGenre(existing);
 
         return Response.ok().build();
