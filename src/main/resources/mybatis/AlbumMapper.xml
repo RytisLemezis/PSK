@@ -11,13 +11,16 @@
     <result column="TITLE" jdbcType="VARCHAR" property="title"/>
     <result column="ARTIST_ID" jdbcType="BIGINT" property="artistId"/>
 
-    <association property="artist" javaType="com.example.psk1.mybatis.model.Artist">
-      <id column="ARTIST_ID" property="id" jdbcType="BIGINT"/>
+    <association property="artist"
+                 javaType="com.example.psk1.mybatis.model.Artist"
+                 columnPrefix="ARTIST_">
+      <id column="ID" property="id" jdbcType="BIGINT"/>
       <result column="FIRSTNAME" property="firstname" jdbcType="VARCHAR"/>
       <result column="LASTNAME" property="lastname" jdbcType="VARCHAR"/>
     </association>
 
-    <collection property="genres" ofType="com.example.psk1.mybatis.model.Genre"
+    <collection property="genres"
+                ofType="com.example.psk1.mybatis.model.Genre"
                 select="selectGenresByAlbumId"
                 column="ID"/>
   </resultMap>
@@ -36,10 +39,9 @@
     update PUBLIC.ALBUM
     set NUMBEROFSONGS = #{numberofsongs,jdbcType=INTEGER},
         TITLE = #{title,jdbcType=VARCHAR},
-        ARTIST_ID = #{artistId,jdbcType=BIGINT}
+        ARTIST_ID = #{artist.id,jdbcType=BIGINT}
     where ID = #{id,jdbcType=BIGINT}
   </update>
-
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -47,8 +49,9 @@
       a.NUMBEROFSONGS,
       a.TITLE,
       a.ARTIST_ID,
-      ar.FIRSTNAME,
-      ar.LASTNAME
+      ar.ID as ARTIST_ID,
+      ar.FIRSTNAME as ARTIST_FIRSTNAME,
+      ar.LASTNAME as ARTIST_LASTNAME
     from PUBLIC.ALBUM a
            left join PUBLIC.ARTIST ar on a.ARTIST_ID = ar.ID
     where a.ID = #{id,jdbcType=BIGINT}
@@ -60,8 +63,9 @@
       a.NUMBEROFSONGS,
       a.TITLE,
       a.ARTIST_ID,
-      ar.FIRSTNAME,
-      ar.LASTNAME
+      ar.ID as ARTIST_ID,
+      ar.FIRSTNAME as ARTIST_FIRSTNAME,
+      ar.LASTNAME as ARTIST_LASTNAME
     from PUBLIC.ALBUM a
            left join PUBLIC.ARTIST ar on a.ARTIST_ID = ar.ID
   </select>
@@ -74,9 +78,17 @@
   </select>
 
   <select id="selectByGenreId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    SELECT a.*
-    FROM album a
-           JOIN ALBUM_GENRE ag ON a.id = ag.ALBUMS_ID
+    SELECT
+      a.ID,
+      a.NUMBEROFSONGS,
+      a.TITLE,
+      a.ARTIST_ID,
+      ar.ID as ARTIST_ID,
+      ar.FIRSTNAME as ARTIST_FIRSTNAME,
+      ar.LASTNAME as ARTIST_LASTNAME
+    FROM PUBLIC.ALBUM a
+           JOIN ALBUM_GENRE ag ON a.ID = ag.ALBUMS_ID
+           LEFT JOIN PUBLIC.ARTIST ar ON a.ARTIST_ID = ar.ID
     WHERE ag.GENRES_ID = #{genreId}
   </select>
 
@@ -85,8 +97,8 @@
   </delete>
 
   <insert id="insertAlbumGenre">
-    INSERT INTO ALBUM_GENRE (ALBUMS_ID, GENRES_ID) VALUES (#{albumId}, #{genreId})
+    INSERT INTO ALBUM_GENRE (ALBUMS_ID, GENRES_ID)
+    VALUES (#{albumId}, #{genreId})
   </insert>
-
 
 </mapper>

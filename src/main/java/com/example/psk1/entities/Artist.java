@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -22,4 +23,7 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist")
     private List<Album> albums;
+
+    @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER)
+    private List<Award> awards = new ArrayList<>();
 }

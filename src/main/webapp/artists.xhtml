@@ -31,6 +31,14 @@
       <p:column headerText="Last Name">
         #{artist.lastName}
       </p:column>
+      <p:column headerText="Awards">
+        <ui:repeat value="#{artist.awards}" var="award" varStatus="i">
+          #{award.title} <h:outputText value="," rendered="#{!i.last}" />
+        </ui:repeat>
+      </p:column>
+      <p:column headerText="Award count">
+        #{artist.awards.size()}
+      </p:column>
       <p:column headerText="Actions">
         <p:commandButton value="Edit" icon="pi pi-pencil"
                          actionListener="#{artistsController.setSelectedArtist(artist)}"

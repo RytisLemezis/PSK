@@ -1,8 +1,11 @@
 package com.example.psk1.services;
 
 import com.example.psk1.entities.Artist;
+import com.example.psk1.entities.Award;
 import com.example.psk1.persistence.ArtistsDAO;
+import com.example.psk1.persistence.AwardsDAO;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -12,6 +15,9 @@ import java.util.List;
 public class ArtistService {
     @Inject
     private ArtistsDAO artistsDAO;
+
+    @Inject
+    private AwardsDAO awardsDAO;
 
     public List<Artist> getAllArtists() {
         return artistsDAO.loadAll();
